@@ -6,14 +6,13 @@ Haiku Fishing is a open-source Windows macro for Grand Piece Online that automat
 
 ## Download
 
-Download (latest release):
-[Download Haiku Fishing.exe][download-latest]
+**Download (latest release): [HaikuFishing_v2.0.1.exe](https://github.com/itshaiku/haikus-fishing/releases/download/v2.0.1/HaikuFishing_v2.0.1.exe)**
 
-Release page:
-[View latest release][releases-latest]
+[View all releases](https://github.com/itshaiku/haikus-fishing/releases)
 
-1. Download `Haiku Fishing.exe`
-2. Run it
+**Steps:**
+1. Click the download link above
+2. Run `HaikuFishing_v2.0.1.exe`
 
 If the UI does not open, install Microsoft Edge WebView2 Runtime:
 https://developer.microsoft.com/microsoft-edge/webview2/
@@ -51,6 +50,3 @@ python src\main.py
 ## Support
 
 Discord: https://discord.gg/6bGw8HDuYV
-
-[download-latest]: https://github.com/haikuhub/haikus-fishing/releases/latest/download/Haiku_Fishing.exe
-[releases-latest]: https://github.com/haikuhub/haikus-fishing/releases/latest

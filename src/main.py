@@ -6,6 +6,14 @@ import sys
 os.environ.setdefault('KMP_DUPLICATE_LIB_OK', 'TRUE')
 os.environ.setdefault('OMP_NUM_THREADS', '1')
 
+# Redirect stdout/stderr when running as frozen EXE to prevent freezing with console=False
+if getattr(sys, 'frozen', False):
+    class DummyFile:
+        def write(self, x): pass
+        def flush(self): pass
+    sys.stdout = DummyFile()
+    sys.stderr = DummyFile()
+
 def _get_macro_settings_path() -> str:
     """Return the filesystem path for macro_settings.json.
 
