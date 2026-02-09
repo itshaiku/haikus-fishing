@@ -1,0 +1,43 @@
+# Personal settings
+macro_settings.json
+
+# Debug folders
+ocr_debug/
+
+# Preview files (not needed for runtime)
+PREVIEW_UI.bat
+preview_ui.py
+
+# Build scripts and outputs
+build.bat
+build.spec
+build_onefile.bat
+build_onefile.spec
+make_release.bat
+*.err
+*.out
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+release/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
