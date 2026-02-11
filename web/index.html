@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haiku Fishing - Advanced Macro</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-icon"><i class="fas fa-fish"></i></div>
+            <div class="loading-title">Haiku Fishing</div>
+            <div class="loading-spinner"></div>
+            <div class="loading-status" id="loadingStatus">Starting up...</div>
+        </div>
+    </div>
+
+    <div class="app-container" id="appContainer" style="opacity: 0;">
+        <!-- Title Bar -->
+        <div class="title-bar" id="titleBar">
+            <div class="title-left">
+                <i class="fas fa-fish"></i>
+                <span>Haiku Fishing</span>
+                <div class="status-dot" style="margin-left: 8px;"></div>
+            </div>
+            <div class="window-controls">
+                <button class="window-btn minimize" onclick="minimizeWindow()"></button>
+                <button class="window-btn maximize" onclick="maximizeWindow()"></button>
+                <button class="window-btn close" onclick="closeWindow()"></button>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="nav-section-header">CONFIGURATION</div>
+            <div class="nav-item active" data-tab="main" onclick="switchTab('main')">
+                <i class="fas fa-th-large"></i>
+                <span>Main</span>
+            </div>
+            <div class="nav-item" data-tab="controls" onclick="switchTab('controls')">
+                <i class="fas fa-sliders-h"></i>
+                <span>Controls</span>
+            </div>
+            <div class="nav-item" data-tab="webhook" onclick="switchTab('webhook')">
+                <i class="fas fa-bell"></i>
+                <span>Discord</span>
+            </div>
+            
+            <div class="nav-section-header">SYSTEM</div>
+            <div class="nav-item" data-tab="settings" onclick="switchTab('settings')">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </div>
+            <div class="nav-item" data-tab="advanced" onclick="switchTab('advanced')">
+                <i class="fas fa-cogs"></i>
+                <span>Advanced</span>
+            </div>
+            <div class="nav-item about" data-tab="about" onclick="switchTab('about')">
+                <i class="fas fa-question-circle"></i>
+                <span>About</span>
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Main Tab -->
+            <div id="main" class="page active">
+                <div class="page-header">
+                    <h1 class="page-title">Main Configuration</h1>
+                    <p class="page-subtitle">Configure your fishing macro keybinds and coordinates</p>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-keyboard"></i>
+                        Keybinds
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Rod Key</label>
+                            <select id="rodHotkeySelect" onchange="updateRodHotkey()">
+                                <option value="1" selected>1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="0">0</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Start/Stop Keybind</label>
+                            <input type="text" value="F1" readonly style="cursor: default;">
+                        </div>
+                        <div class="form-group">
+                            <label>Anything else Key</label>
+                            <select id="anythingElseHotkeySelect" onchange="updateAnythingElseHotkey()">
+                                <option value="1">1</option>
+                                <option value="2" selected>2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="0">0</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Change Area</label>
+                            <input type="text" value="F2" readonly style="cursor: default;">
+                        </div>
+                        <div class="form-group">
+                            <label>Devil Fruit Key</label>
+                            <select id="devilFruitHotkeyDropdown" onchange="updateDevilFruitHotkey()">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3" selected>3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="0">0</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Water Point</div>
+                    <div style="background: var(--bg-primary); padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div>
+                                <label style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px; display: block;">Click the location in water where you want to cast your fishing rod</label>
+                                <span class="coord-display" id="waterPointDisplay">Not Set</span>
+                            </div>
+                            <button class="btn btn-secondary btn-sm" onclick="setWaterPoint()" style="padding: 6px 12px;">Set Point</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls Tab -->
+            <div id="controls" class="page">
+                <div class="page-header">
+                    <h1 class="page-title">Controls</h1>
+                    <p class="page-subtitle">Configure automatic actions before starting your fishing macro</p>
+                </div>
+
+                <!-- Auto Buy Common Bait -->
+                <div class="section">
+                    <div class="toggle-wrapper">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 4px;">Auto Buy Common Bait</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Automatically purchase common bait at configured intervals</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div class="toggle" id="autoBuyBaitToggle" onclick="toggleAutoBuyBait()"></div>
+                            <span class="collapse-arrow collapsed" onclick="toggleCollapse(this)">
+                                <i class="fas fa-chevron-down"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="section-content collapsed" id="autoBuySection">
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label>Loops Per Purchase</label>
+                            <input type="number" id="loopsPerPurchaseInput" value="100" min="1" max="1000" onchange="updateLoopsPerPurchase()">
+                        </div>
+                        <div class="point-grid">
+                            <div class="point-item">
+                                <div class="point-label">Left Point</div>
+                                <div class="point-coords" id="leftPointDisplay">Not Set</div>
+                                <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="setLeftPoint()">Set Point</button>
+                            </div>
+                            <div class="point-item">
+                                <div class="point-label">Middle Point</div>
+                                <div class="point-coords" id="middlePointDisplay">Not Set</div>
+                                <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="setMiddlePoint()">Set Point</button>
+                            </div>
+                            <div class="point-item">
+                                <div class="point-label">Right Point</div>
+                                <div class="point-coords" id="rightPointDisplay">Not Set</div>
+                                <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="setRightPoint()">Set Point</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Auto Craft Bait -->
+                <div class="section">
+                    <div class="toggle-wrapper">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 4px;">Auto Craft Bait</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Automatically craft rare and legendary baits after each bait purchase</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div class="toggle" id="autoCraftBaitToggle" onclick="toggleAutoCraftBait()"></div>
+                            <span class="collapse-arrow collapsed" onclick="toggleCollapse(this)">
+                                <i class="fas fa-chevron-down"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="section-content collapsed" id="autoCraftSection">
+                        <div style="display: flex; gap: 8px; margin-bottom: 16px; align-items: center; flex-wrap: wrap;">
+                            <div class="checkbox-wrapper">
+                                <div class="checkbox" id="craftLegBaitCheckbox" onclick="toggleCraftLegBait()">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <span>Leg Bait</span>
+                            </div>
+                            <button class="btn btn-secondary btn-sm" id="legBaitSetPointBtn" onclick="setLegBaitPoint()" style="padding: 6px 10px;" disabled>Set Point</button>
+                            <span class="coord-display" id="legBaitPointDisplay" style="font-size: 10px;">Not Set</span>
+
+                            <div class="checkbox-wrapper" style="margin-left: 8px;">
+                                <div class="checkbox" id="craftRareBaitCheckbox" onclick="toggleCraftRareBait()">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <span>Rare Bait</span>
+                            </div>
+                            <button class="btn btn-secondary btn-sm" id="rareBaitSetPointBtn" onclick="setRareBaitPoint()" style="padding: 6px 10px;" disabled>Set Point</button>
+                            <span class="coord-display" id="rareBaitPointDisplay" style="font-size: 10px;">Not Set</span>
+                        </div>
+
+                        <div class="point-grid" style="grid-template-columns: repeat(4, 1fr);">
+                            <div class="point-item">
+                                <div class="point-label">+ Button</div>
+                                <div class="point-coords" id="craftPoint1Display">Not Set</div>
+                                <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="setCraftPoint1()">Set Point</button>
+                            </div>
+                            <div class="point-item">
+                                <div class="point-label">Fish Button</div>
+                                <div class="point-coords" id="craftPoint2Display">Not Set</div>
+                                <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="setCraftPoint2()">Set Point</button>
+                            </div>
+                            <div class="point-item">
+                                <div class="point-label">Craft Button</div>
+                                <div class="point-coords" id="craftPoint3Display">Not Set</div>
+                                <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="setCraftPoint3()">Set Point</button>
+                            </div>
+                            <div class="point-item">
+                                <div class="point-label">Exit Button</div>
+                                <div class="point-coords" id="craftPoint4Display">Not Set</div>
+                                <button class="btn btn-secondary btn-sm" style="width: 100%;" onclick="setCraftPoint4()">Set Point</button>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
+                            <div style="font-weight: 600; margin-bottom: 4px; color: var(--text-primary);">Navigation Path</div>
+                            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">Configure your custom path to the crafting NPC using WASD keys</p>
+                            <div style="display: flex; gap: 12px;">
+                                <div class="nav-step-card">
+                                    <div class="nav-step-header">
+                                        <span class="nav-step-label">Step 1</span>
+                                    </div>
+                                    <div class="nav-step-fields">
+                                        <div class="nav-step-field">
+                                            <label class="nav-step-field-label">Key</label>
+                                            <input type="text" class="nav-step-key" id="craftNavKey1Input" value="s" maxlength="1" onchange="updateAdvancedTiming()">
+                                        </div>
+                                        <div class="nav-step-field">
+                                            <label class="nav-step-field-label">Duration</label>
+                                            <div class="nav-step-duration-wrap">
+                                                <input type="number" class="nav-step-duration" id="craftNavDuration1Input" value="0.3" step="0.1" onchange="updateAdvancedTiming()">
+                                                <span class="nav-step-unit">s</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="nav-step-card">
+                                    <div class="nav-step-header">
+                                        <span class="nav-step-label">Step 2</span>
+                                    </div>
+                                    <div class="nav-step-fields">
+                                        <div class="nav-step-field">
+                                            <label class="nav-step-field-label">Key</label>
+                                            <input type="text" class="nav-step-key" id="craftNavKey2Input" value="d" maxlength="1" onchange="updateAdvancedTiming()">
+                                        </div>
+                                        <div class="nav-step-field">
+                                            <label class="nav-step-field-label">Duration</label>
+                                            <div class="nav-step-duration-wrap">
+                                                <input type="number" class="nav-step-duration" id="craftNavDuration2Input" value="3.5" step="0.1" onchange="updateAdvancedTiming()">
+                                                <span class="nav-step-unit">s</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Auto Select Top Bait -->
+                <div class="section">
+                    <div class="toggle-wrapper">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 4px;">Auto Select Top Bait</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Automatically select the top bait</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div class="toggle" id="autoSelectBaitToggle" onclick="toggleAutoSelectBait()"></div>
+                            <span class="collapse-arrow collapsed" onclick="toggleCollapse(this)">
+                                <i class="fas fa-chevron-down"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="section-content collapsed" id="autoSelectSection">
+                        <div style="background: var(--bg-primary); padding: 16px; border-radius: 8px; border: 1px solid var(--border); transition: border-color 0.2s ease;" onmouseenter="this.style.borderColor='rgba(139,92,246,0.2)'" onmouseleave="this.style.borderColor='var(--border)'">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div>
+                                    <label style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px; display: block;">Bait Point Coordinates</label>
+                                    <span class="coord-display" id="baitPointDisplay">Not Set</span>
+                                </div>
+                                <button class="btn btn-secondary btn-sm" onclick="setBaitPoint()" style="padding: 6px 12px;">Set Point</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Auto Store Devil Fruit -->
+                <div class="section">
+                    <div class="toggle-wrapper">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 4px;">Auto Store Devil Fruit</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Automatically store devil fruits when detected</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div class="toggle" id="autoStoreFruitToggle" onclick="toggleAutoStoreFruit()"></div>
+                            <span class="collapse-arrow collapsed" onclick="toggleCollapse(this)">
+                                <i class="fas fa-chevron-down"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="section-content collapsed" id="autoStoreSection">
+                        <div style="background: var(--bg-primary); padding: 16px; border-radius: 8px; border: 1px solid var(--border); transition: border-color 0.2s ease;" onmouseenter="this.style.borderColor='rgba(139,92,246,0.2)'" onmouseleave="this.style.borderColor='var(--border)'">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div>
+                                    <label style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px; display: block;">Store Fruit Point Coordinates</label>
+                                    <span class="coord-display" id="storeFruitPointDisplay">Not Set</span>
+                                </div>
+                                <button class="btn btn-secondary btn-sm" onclick="setStoreFruitPoint()" style="padding: 6px 12px;">Set Point</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Discord Webhook Tab -->
+            <div id="webhook" class="page">
+                <div class="page-header">
+                    <h1 class="page-title">Discord Webhook</h1>
+                    <p class="page-subtitle">Configure Discord webhook notifications for important events during fishing</p>
+                </div>
+                <div class="section">
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label>Discord Webhook URL</label>
+                        <input type="text" class="webhook-input" id="webhookUrlInput" placeholder="Enter webhook URL...">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 6px;">
+                            <i class="fas fa-info-circle"></i> To get your webhook: Discord &rarr; Server Settings &rarr; Integrations &rarr; Webhooks &rarr; Copy URL
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label>Discord User ID (for pings)</label>
+                        <input type="text" class="webhook-input" id="discordUserIdInput" placeholder="Enter user ID...">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 6px;">
+                            <i class="fas fa-info-circle"></i> Right-click your profile &rarr; Copy User ID (enable Developer Mode in Settings first)
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+                        <button class="btn btn-secondary" onclick="saveWebhookSettings()">Save Settings</button>
+                        <button class="btn btn-primary" onclick="testWebhook()">Test Connection</button>
+                    </div>
+                    <div style="border-top: 1px solid var(--border); padding-top: 20px;">
+                        <div class="section-title"><i class="fas fa-bell"></i> Notification Options</div>
+                        <div class="notification-list">
+                            <div class="notification-item">
+                                <div>
+                                    <div style="font-weight: 500; margin-bottom: 2px; font-size: 13px;">Devil Fruit Caught</div>
+                                    <div style="font-size: 10px; color: var(--text-muted);">Get notified when you catch a devil fruit</div>
+                                </div>
+                                <div class="toggle active" id="webhookDevilFruitToggle" onclick="toggleWebhookOption('devil_fruit')"></div>
+                            </div>
+                            <div class="notification-item">
+                                <div>
+                                    <div style="font-weight: 500; margin-bottom: 2px; font-size: 13px;">Bait Purchased</div>
+                                    <div style="font-size: 10px; color: var(--text-muted);">Get notified when bait is auto-purchased</div>
+                                </div>
+                                <div class="toggle active" id="webhookPurchaseToggle" onclick="toggleWebhookOption('purchase')"></div>
+                            </div>
+                            <div class="notification-item">
+                                <div>
+                                    <div style="font-weight: 500; margin-bottom: 2px; font-size: 13px;">Watchdog Recovery</div>
+                                    <div style="font-size: 10px; color: var(--text-muted);">Get notified when macro recovers from error</div>
+                                </div>
+                                <div class="toggle active" id="webhookRecoveryToggle" onclick="toggleWebhookOption('recovery')"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Tab -->
+            <div id="advanced" class="page">
+                <div class="page-header" id="advancedHeader" style="display: none;">
+                    <h1 class="page-title">Advanced Settings</h1>
+                    <p class="page-subtitle">Fine-tune timing and control parameters</p>
+                </div>
+                <div class="warning-banner" id="warningBanner">
+                    <div class="warning-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="warning-title">Do you know what you are doing?</div>
+                    <div class="warning-text">Advanced settings are extremely powerful and intended only for experienced users. Manually configuring them can cause serious stability issues. Do NOT change these settings if you are unsure of what you are doing.</div>
+                    <div class="warning-actions">
+                        <button class="btn btn-secondary" onclick="goBack()"><i class="fas fa-arrow-left"></i> Go Back</button>
+                        <button class="btn btn-danger" onclick="proceedAdvanced()"><i class="fas fa-check"></i> I know what I'm doing</button>
+                    </div>
+                </div>
+                <div id="advancedContent" style="display: none;">
+                    <div class="danger-zone">
+                        <div class="danger-title"><i class="fas fa-exclamation-circle"></i> Reset Advanced Settings</div>
+                        <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Restore all timing delays and control parameters to defaults</p>
+                        <button class="btn btn-danger" style="width: 100%;" onclick="showResetConfirmation()"><i class="fas fa-undo"></i> Reset to Defaults</button>
+                    </div>
+                    <div class="section">
+                        <div class="section-title" style="color: var(--danger);"><i class="fas fa-radiation"></i> Don't change if you don't know what you're doing</div>
+                        
+                        <div class="subsection-title">PD Controller</div>
+                        <div class="param-grid">
+                            <div class="param-item"><span class="param-name">Kp (Proportional)</span><input type="number" class="param-input" id="kpInput" value="0.9" step="0.1" onchange="updatePDParams()"></div>
+                            <div class="param-item"><span class="param-name">Kd (Derivative)</span><input type="number" class="param-input" id="kdInput" value="0.3" step="0.1" onchange="updatePDParams()"></div>
+                            <div class="param-item"><span class="param-name">PD Clamp</span><input type="number" class="param-input" id="pdClampInput" value="1.0" step="0.1" onchange="updatePDParams()"></div>
+                        </div>
+
+                        <div class="subsection-title">Auto Buy Bait Delays</div>
+                        <div class="param-grid">
+                            <div class="param-item"><span class="param-name">Press 'E' Delay (s)</span><input type="number" class="param-input" id="preCastEDelayInput" value="3.0" step="0.1" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">Click Delay (s)</span><input type="number" class="param-input" id="preCastClickDelayInput" value="3.0" step="0.1" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">Type Number Delay (s)</span><input type="number" class="param-input" id="preCastTypeDelayInput" value="3.0" step="0.1" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">Anti-Detect Micro Delay (s)</span><input type="number" class="param-input" id="preCastAntiDetectDelayInput" value="0.05" step="0.01" onchange="updateAdvancedTiming()"></div>
+                        </div>
+
+                        <div class="subsection-title">Auto Select Bait Delays</div>
+                        <div class="param-grid">
+                            <div class="param-item"><span class="param-name">Bait Click Delay (s)</span><input type="number" class="param-input" id="autoSelectBaitDelayInput" value="0.5" step="0.1" onchange="updateAdvancedTiming()"></div>
+                        </div>
+
+                        <div class="subsection-title">Auto Store Devil Fruit Delays</div>
+                        <div class="param-grid">
+                            <div class="param-item"><span class="param-name">Hotkey Press Delay (s)</span><input type="number" class="param-input" id="storeFruitHotkeyDelayInput" value="1.0" step="0.1" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">Click Store Point Delay (s)</span><input type="number" class="param-input" id="storeFruitClickDelayInput" value="2.0" step="0.1" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">Shift Key Delay (s)</span><input type="number" class="param-input" id="storeFruitShiftDelayInput" value="0.5" step="0.1" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">Backspace Delay (s)</span><input type="number" class="param-input" id="storeFruitBackspaceDelayInput" value="1.5" step="0.1" onchange="updateAdvancedTiming()"></div>
+                        </div>
+
+                        <div class="subsection-title">Auto Craft Bait Other Timing</div>
+                        <div class="param-grid">
+                            <div class="param-item"><span class="param-name">Navigation Wait Delay (s)</span><input type="number" class="param-input" id="craftNavWaitDelayInput" value="1.0" step="0.1" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">'T' Press Delay (s)</span><input type="number" class="param-input" id="craftTPressDelayInput" value="1.0" step="0.1" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">Click Delay (s)</span><input type="number" class="param-input" id="craftClickDelayInput" value="1.0" step="0.1" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">+/Fish Button Delay (s)</span><input type="number" class="param-input" id="craftButtonDelayInput" value="0.5" step="0.1" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">Craft Button Delay (s)</span><input type="number" class="param-input" id="craftCraftButtonDelayInput" value="0.5" step="0.1" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">Sequence Delay (s)</span><input type="number" class="param-input" id="craftSequenceDelayInput" value="0.3" step="0.1" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">Exit Button Delay (s)</span><input type="number" class="param-input" id="craftExitDelayInput" value="0.5" step="0.1" onchange="updateAdvancedTiming()"></div>
+                        </div>
+
+                        <div class="subsection-title">Fishing Loop Delays</div>
+                        <div class="param-grid">
+                            <div class="param-item"><span class="param-name">Cast Hold Duration (s)</span><input type="number" class="param-input" id="castHoldInput" value="1.0" step="0.1" onchange="updateCastTiming()"></div>
+                            <div class="param-item"><span class="param-name">Recast Timeout (s)</span><input type="number" class="param-input" id="recastTimeoutInput" value="30" step="1" onchange="updateCastTiming()"></div>
+                            <div class="param-item"><span class="param-name">Fish End Delay (s)</span><input type="number" class="param-input" id="fishEndDelayInput" value="2.0" step="0.1" onchange="updateFishTiming()"></div>
+                            <div class="param-item"><span class="param-name">Rod Selection Delay (s)</span><input type="number" class="param-input" id="rodSelectDelayInput" value="0.5" step="0.1" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">Cursor Anti-Detect Delay (s)</span><input type="number" class="param-input" id="cursorAntiDetectDelayInput" value="0.05" step="0.01" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">Color Scan Loop Delay (s)</span><input type="number" class="param-input" id="scanLoopDelayInput" value="0.1" step="0.01" onchange="updateAdvancedTiming()"></div>
+                        </div>
+
+                        <div class="subsection-title">PD Control Advanced</div>
+                        <div class="param-grid">
+                            <div class="param-item"><span class="param-name">Approaching Damping Multiplier</span><input type="number" class="param-input" id="pdApproachingDampingInput" value="2.0" step="0.1" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">Chasing Damping Multiplier</span><input type="number" class="param-input" id="pdChasingDampingInput" value="0.5" step="0.1" onchange="updateAdvancedTiming()"></div>
+                            <div class="param-item"><span class="param-name">Gap Tolerance Multiplier</span><input type="number" class="param-input" id="gapToleranceMultiplierInput" value="2.0" step="0.1" onchange="updateAdvancedTiming()"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="page">
+                <div class="page-header">
+                    <h1 class="page-title">Settings</h1>
+                    <p class="page-subtitle">General app preferences</p>
+                </div>
+                <div class="section">
+                    <div class="section-title"><i class="fas fa-bell"></i> Notifications</div>
+                    <div style="margin-bottom: 8px;">
+                        <div class="checkbox-wrapper">
+                            <div class="checkbox checked" id="webhookPingsCheckbox" onclick="toggleWebhookPings()"><i class="fas fa-check"></i></div>
+                            <div style="font-weight: 500;">Webhook Pings</div>
+                        </div>
+                        <div style="font-size: 11px; color: var(--text-muted); margin-left: 28px; margin-top: 2px;">Ping you in Discord for important events</div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="section-title"><i class="fas fa-window-maximize"></i> Window Behavior</div>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div>
+                            <div class="checkbox-wrapper">
+                                <div class="checkbox checked" id="stayOnTopCheckbox" onclick="toggleStayOnTop()"><i class="fas fa-check"></i></div>
+                                <div style="font-weight: 500;">Always On Top</div>
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-muted); margin-left: 28px; margin-top: 2px;">Keep this window above all others (requires restart)</div>
+                        </div>
+                        <div>
+                            <div class="checkbox-wrapper">
+                                <div class="checkbox" id="minimizeCheckbox" onclick="toggleMinimizeOnRun()"><i class="fas fa-check"></i></div>
+                                <div style="font-weight: 500;">Minimize On Start</div>
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-muted); margin-left: 28px; margin-top: 2px;">Minimize the window when the macro starts</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Tab -->
+            <div id="about" class="page">
+                <div class="about-card">
+                    <div class="about-logo"><i class="fas fa-fish"></i></div>
+                    <h2 class="about-title">Haiku Fishing</h2>
+                    <p class="about-desc">Advanced fishing macro for Grand Piece Online</p>
+                    <div class="about-meta">
+                        <div class="meta-item"><div class="meta-label">Version</div><div class="meta-value">2.1.0</div></div>
+                        <div class="meta-item"><div class="meta-label">Created by</div><div class="meta-value" style="color: var(--accent-primary);">Haiku</div></div>
+                    </div>
+                    <a href="https://discord.gg/87HgYm2APJ" target="_blank" class="discord-btn"><i class="fab fa-discord"></i> Join Our Discord</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <div class="toast-icon success"><i class="fas fa-check"></i></div>
+        <div class="toast-content">
+            <div class="toast-title">Success</div>
+            <div class="toast-message">Operation completed successfully</div>
+        </div>
+    </div>
+
+    <!-- Reset Modal -->
+    <div class="modal-overlay" id="resetModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <div><div class="modal-title">Reset Advanced Settings?</div></div>
+            </div>
+            <div class="modal-text">
+                This will reset timing and control settings:
+                <ul style="margin-top: 8px; margin-left: 16px; line-height: 1.8;">
+                    <li>PD Controller values</li>
+                    <li>All timing delays</li>
+                    <li>Navigation path settings</li>
+                    <li>Loop intervals</li>
+                </ul>
+                <div style="color: var(--danger); margin-top: 12px; font-weight: 500;"><i class="fas fa-exclamation-circle"></i> This action cannot be undone!</div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeResetConfirmation()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmReset()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
